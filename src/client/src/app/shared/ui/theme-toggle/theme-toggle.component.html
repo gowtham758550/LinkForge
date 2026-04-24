@@ -1,0 +1,13 @@
+<button
+  (click)="themeStore.toggle()"
+  class="rounded-lg p-2 text-[var(--muted-fg)] transition-colors hover:bg-[var(--muted)] hover:text-[var(--fg)]"
+  [attr.aria-label]="'Theme: ' + themeStore.theme()"
+>
+  @if (themeStore.theme() === 'dark') {
+    <fa-icon [icon]="faSun" class="text-base" />
+  } @else if (themeStore.theme() === 'light') {
+    <fa-icon [icon]="faMoon" class="text-base" />
+  } @else {
+    <fa-icon [icon]="faDesktop" class="text-base" />
+  }
+</button>

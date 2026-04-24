@@ -1,0 +1,9 @@
+<div class="space-y-3">
+  @for (url of urls(); track url.shortCode) {
+    <app-url-card
+      [url]="url"
+      (copyClick)="copyClick.emit($event)"
+      (deleteClick)="deleteClick.emit($event)"
+    />
+  }
+</div>

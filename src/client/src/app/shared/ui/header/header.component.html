@@ -1,0 +1,107 @@
+<header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--card-bg)]">
+  <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+
+    <a routerLink="/" class="flex items-center gap-2 no-underline">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
+        <fa-icon [icon]="faLink" class="text-sm text-white" />
+      </div>
+      <span class="text-[17px] font-bold tracking-tight text-primary">LinkForge</span>
+    </a>
+
+    @if (authStore.isAuthenticated()) {
+      <div class="flex items-center gap-1">
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="text-primary"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-[var(--muted-fg)] transition-colors hover:text-primary"
+        >
+          <fa-icon [icon]="faGaugeHigh" class="text-xs" />
+          Dashboard
+        </a>
+
+        <div class="relative ml-1">
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); toggleMenu()"
+            aria-label="Account menu"
+            class="flex items-center gap-1.5 rounded-full p-0.5 transition-colors hover:bg-[var(--muted)]"
+          >
+            @if (authStore.userPicture()) {
+              <img
+                [src]="authStore.userPicture()"
+                [alt]="authStore.userName()"
+                class="h-8 w-8 rounded-full object-cover"
+                referrerpolicy="no-referrer"
+              />
+            } @else {
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-white"
+              >
+                {{ authStore.initials() }}
+              </div>
+            }
+            <fa-icon [icon]="faChevronDown" class="mr-1 text-[10px] text-[var(--muted-fg)]" />
+          </button>
+
+          @if (menuOpen()) {
+            <div class="fixed inset-0 z-40" (click)="closeMenu()"></div>
+            <div
+              class="absolute right-0 top-full z-50 mt-2 w-60 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card-bg)] shadow-xl"
+            >
+              <div class="border-b border-[var(--border)] px-4 py-3">
+                <p class="text-sm font-semibold text-[var(--fg)]">{{ authStore.userName() }}</p>
+                <p class="truncate text-xs text-[var(--muted-fg)]">{{ authStore.userEmail() }}</p>
+              </div>
+
+              <div class="border-b border-[var(--border)] p-2">
+                <p class="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-fg)]">Theme</p>
+                <div class="grid grid-cols-3 gap-1">
+                  <button
+                    type="button"
+                    (click)="setTheme('light')"
+                    [class.bg-primary]="themeStore.theme() === 'light'"
+                    [class.text-white]="themeStore.theme() === 'light'"
+                    class="flex flex-col items-center gap-1 rounded-md px-2 py-2 text-[11px] font-medium text-[var(--fg)] transition-colors hover:bg-[var(--muted)]"
+                  >
+                    <fa-icon [icon]="faSun" class="text-xs" />
+                    Light
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setTheme('dark')"
+                    [class.bg-primary]="themeStore.theme() === 'dark'"
+                    [class.text-white]="themeStore.theme() === 'dark'"
+                    class="flex flex-col items-center gap-1 rounded-md px-2 py-2 text-[11px] font-medium text-[var(--fg)] transition-colors hover:bg-[var(--muted)]"
+                  >
+                    <fa-icon [icon]="faMoon" class="text-xs" />
+                    Dark
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setTheme('system')"
+                    [class.bg-primary]="themeStore.theme() === 'system'"
+                    [class.text-white]="themeStore.theme() === 'system'"
+                    class="flex flex-col items-center gap-1 rounded-md px-2 py-2 text-[11px] font-medium text-[var(--fg)] transition-colors hover:bg-[var(--muted)]"
+                  >
+                    <fa-icon [icon]="faDesktop" class="text-xs" />
+                    System
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                (click)="logout()"
+                class="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-[var(--fg)] transition-colors hover:bg-[var(--muted)]"
+              >
+                <fa-icon [icon]="faRightFromBracket" class="text-xs text-[var(--muted-fg)]" />
+                Sign out
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</header>

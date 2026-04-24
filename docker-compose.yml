@@ -1,0 +1,84 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: urlshortener-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - urlshortener-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: urlshortener-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - urlshortener-net
+
+  api:
+    build:
+      context: .
+      dockerfile: src/UrlShortener.API/Dockerfile
+    container_name: urlshortener-api
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - MongoDB__ConnectionString=mongodb://mongodb:27017
+      - MongoDB__DatabaseName=urlshortener
+      - Redis__ConnectionString=redis:6379
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+      - Jwt__Secret=${JWT_SECRET}
+      - Google__ClientId=${GOOGLE_CLIENT_ID}
+      - Google__ClientSecret=${GOOGLE_CLIENT_SECRET}
+      - BaseUrl=${BASE_URL}
+      - ClientUrl=${CLIENT_URL}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - urlshortener-net
+
+  mcp:
+    build:
+      context: .
+      dockerfile: src/UrlShortener.MCP/Dockerfile
+    container_name: urlshortener-mcp
+    ports:
+      - "5002:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - MongoDB__ConnectionString=mongodb://mongodb:27017
+      - MongoDB__DatabaseName=urlshortener
+      - Redis__ConnectionString=redis:6379
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__McpAudience=${JWT_MCP_AUDIENCE}
+      - Jwt__Secret=${JWT_SECRET}
+      - BaseUrl=${BASE_URL}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - urlshortener-net
+
+  client:
+    build:
+      context: src/client
+      dockerfile: Dockerfile
+    container_name: urlshortener-client
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    networks:
+      - urlshortener-net
+
+volumes:
+  mongo-data:
+
+networks:
+  urlshortener-net:
+    driver: bridge

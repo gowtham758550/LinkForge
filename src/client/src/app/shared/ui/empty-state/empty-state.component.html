@@ -1,0 +1,9 @@
+<div class="flex flex-col items-center justify-center py-12 text-center">
+  <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+    <fa-icon [icon]="icon()" class="text-2xl text-primary" />
+  </div>
+  <h3 class="mt-4 text-lg font-semibold text-[var(--fg)]">{{ title() }}</h3>
+  @if (subtitle()) {
+    <p class="mt-1 text-sm text-[var(--muted-fg)]">{{ subtitle() }}</p>
+  }
+</div>

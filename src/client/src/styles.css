@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "ngx-toastr/toastr";
+@source "./app/**/*.html";
+@source "./app/**/*.ts";
+
+/* Dark mode: supports both system preference and manual .dark class */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #970747;
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #7a0539;
+  --color-danger: #e11d48;
+  --color-danger-soft: #fef2f4;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* CSS custom properties for light/dark surfaces */
+:root {
+  --bg: #fafafa;
+  --fg: #0f0f0f;
+  --card-bg: #ffffff;
+  --card-fg: #0f0f0f;
+  --muted: #f4f4f5;
+  --muted-fg: #71717a;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #970747;
+  --danger: #e11d48;
+  --danger-soft: #fef2f4;
+  --danger-border: #fecdd3;
+}
+
+/* System dark mode (only when user hasn't forced .light) */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --bg: #09090b;
+    --fg: #fafafa;
+    --card-bg: #18181b;
+    --card-fg: #fafafa;
+    --muted: #27272a;
+    --muted-fg: #a1a1aa;
+    --border: #27272a;
+    --input: #27272a;
+    --danger-soft: #3b0d17;
+    --danger-border: #7f1d1d;
+  }
+}
+
+/* Manual dark override */
+:root.dark {
+  --bg: #09090b;
+  --fg: #fafafa;
+  --card-bg: #18181b;
+  --card-fg: #fafafa;
+  --muted: #27272a;
+  --muted-fg: #a1a1aa;
+  --border: #27272a;
+  --input: #27272a;
+  --danger-soft: #3b0d17;
+  --danger-border: #7f1d1d;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Skeleton shimmer */
+@keyframes skeleton-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0%,
+    color-mix(in srgb, var(--muted) 60%, white) 50%,
+    var(--muted) 100%
+  );
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s infinite linear;
+  border-radius: 0.5rem;
+}
+
+/* Toastr theme override — match primary palette */
+.toast-container .ngx-toastr {
+  font-family: 'Inter', system-ui, sans-serif;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  padding: 14px 18px 14px 50px;
+}
+.toast-container .toast-success {
+  background-color: var(--color-primary);
+  background-image: none;
+}
+.toast-container .toast-error {
+  background-color: var(--danger);
+  background-image: none;
+}

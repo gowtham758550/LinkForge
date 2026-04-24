@@ -1,0 +1,46 @@
+<main class="mx-auto max-w-5xl px-6 py-8">
+  @if (urlStore.loading()) {
+    <app-dashboard-skeleton />
+  } @else {
+    <div class="mb-6">
+      <h1 class="text-[28px] font-extrabold tracking-tight text-[var(--fg)]">
+        Welcome back, {{ authStore.firstName() || authStore.userName() }}! 👑
+      </h1>
+      <p class="mt-1 text-sm text-[var(--muted-fg)]">
+        You have
+        <span class="font-bold text-primary">{{ urlStore.urlCount() }}</span>
+        {{ urlStore.urlCount() === 1 ? 'link' : 'links' }}
+      </p>
+    </div>
+
+    @if (urlStore.error()) {
+      <div class="mb-5">
+        <app-error-banner [message]="urlStore.error()!" (dismiss)="urlStore.clearError()" />
+      </div>
+    }
+
+    <div class="mb-6">
+      <app-shorten-form
+        #shortenForm
+        [submitting]="urlStore.submitting()"
+        (shortened)="onShorten($event)"
+      />
+    </div>
+
+    @if (urlStore.urlCount() === 0) {
+      <div class="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)]">
+        <app-empty-state
+          [icon]="faLink"
+          title="No links yet"
+          subtitle="Shorten your first link to get started."
+        />
+      </div>
+    } @else {
+      <app-url-list
+        [urls]="urlStore.urls()"
+        (copyClick)="onCopy($event)"
+        (deleteClick)="onDelete($event)"
+      />
+    }
+  }
+</main>

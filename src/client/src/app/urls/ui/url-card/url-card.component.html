@@ -1,0 +1,57 @@
+<div
+  class="flex items-center gap-4 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4 transition-colors hover:border-primary/30"
+>
+  <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+    <fa-icon [icon]="faLink" class="text-sm text-primary" />
+  </div>
+
+  <div class="flex min-w-0 flex-1 flex-col gap-0.5">
+    <p class="truncate text-xs text-[var(--muted-fg)]">{{ url().longUrl }}</p>
+    <a
+      [href]="url().shortUrl"
+      target="_blank"
+      rel="noopener"
+      class="truncate text-sm font-bold text-primary transition-colors hover:text-[#7a0539]"
+    >
+      {{ url().shortUrl }}
+    </a>
+    <p class="text-[11px] text-[var(--muted-fg)]">
+      Created {{ url().createdAt | date: 'MMM d, y' }}
+      <span class="mx-1">·</span>
+      @if (url().expiresAt) {
+        Expires {{ url().expiresAt | date: 'MMM d, y' }}
+      } @else {
+        Expires Never
+      }
+    </p>
+  </div>
+
+  <div class="flex shrink-0 items-center gap-1">
+    <button
+      type="button"
+      (click)="onCopy()"
+      aria-label="Copy link"
+      title="Copy link"
+      class="rounded-lg border border-[var(--border)] p-2 text-[var(--muted-fg)] transition-colors hover:border-primary/40 hover:bg-[var(--muted)] hover:text-[var(--fg)]"
+    >
+      <fa-icon [icon]="faCopy" class="text-xs" />
+    </button>
+    <a
+      [routerLink]="['/dashboard/analytics', url().shortCode]"
+      aria-label="View analytics"
+      title="Analytics"
+      class="rounded-lg border border-[var(--border)] p-2 text-[var(--muted-fg)] transition-colors hover:border-primary/40 hover:bg-[var(--muted)] hover:text-[var(--fg)]"
+    >
+      <fa-icon [icon]="faChart" class="text-xs" />
+    </a>
+    <button
+      type="button"
+      (click)="deleteClick.emit(url().shortCode)"
+      aria-label="Delete link"
+      title="Delete"
+      class="rounded-lg border border-[var(--danger-border)] bg-[var(--danger-soft)] p-2 text-[var(--danger)] transition-colors hover:brightness-95"
+    >
+      <fa-icon [icon]="faTrash" class="text-xs" />
+    </button>
+  </div>
+</div>

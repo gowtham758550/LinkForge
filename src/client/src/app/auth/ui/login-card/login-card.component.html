@@ -1,0 +1,26 @@
+<div class="flex min-h-[calc(100vh-3.5rem)] items-center justify-center px-4 py-10">
+  <div
+    class="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-10 shadow-sm"
+  >
+    <div class="flex flex-col items-center text-center">
+      <div
+        class="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary shadow-lg shadow-primary/30"
+      >
+        <fa-icon [icon]="faLink" class="text-2xl text-white" />
+      </div>
+      <h1 class="text-[28px] font-extrabold tracking-tight text-primary">LinkForge</h1>
+      <p class="mt-2 text-sm leading-relaxed text-[var(--muted-fg)]">
+        Shorten links. Share anywhere.<br />Track everything.
+      </p>
+
+      <button
+        type="button"
+        (click)="loginClick.emit()"
+        class="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3 text-sm font-semibold text-[var(--fg)] transition-all duration-150 hover:border-primary/30 hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/30"
+      >
+        <fa-icon [icon]="faGoogle" class="text-lg" style="color: #4285f4" />
+        Continue with Google
+      </button>
+    </div>
+  </div>
+</div>

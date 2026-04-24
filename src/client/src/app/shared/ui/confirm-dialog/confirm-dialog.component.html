@@ -1,0 +1,35 @@
+@if (confirm.state().open) {
+  <div
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+    (click)="confirm.respond(false)"
+  >
+    <div
+      class="w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-2xl"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 class="text-lg font-semibold text-[var(--fg)]">{{ confirm.state().title }}</h2>
+      <p class="mt-2 text-sm text-[var(--muted-fg)]">{{ confirm.state().message }}</p>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button
+          type="button"
+          (click)="confirm.respond(false)"
+          class="rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-2 text-sm font-medium text-[var(--fg)] transition-colors hover:bg-[var(--muted)]"
+        >
+          {{ confirm.state().cancelLabel ?? 'Cancel' }}
+        </button>
+        <button
+          type="button"
+          (click)="confirm.respond(true)"
+          [class]="
+            confirm.state().destructive
+              ? 'rounded-lg bg-[var(--danger)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:brightness-110'
+              : 'rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#7a0539]'
+          "
+        >
+          {{ confirm.state().confirmLabel ?? 'Confirm' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
