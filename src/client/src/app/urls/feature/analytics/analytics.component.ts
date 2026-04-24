@@ -5,6 +5,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { UrlStore } from '../../data-access/url.store';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-analytics',
@@ -16,6 +17,7 @@ export class AnalyticsComponent implements OnInit {
   readonly urlStore = inject(UrlStore);
   readonly faArrowLeft = faArrowLeft;
   private readonly route = inject(ActivatedRoute);
+  readonly apiUrl = environment.apiUrl;
 
   readonly chartConfig = {
     type: 'area' as const,
