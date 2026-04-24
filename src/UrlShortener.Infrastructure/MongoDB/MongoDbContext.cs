@@ -26,6 +26,7 @@ public sealed class MongoDbContext
             cm.MapProperty(u => u.ExpiresAt).SetElementName("expiresAt");
             cm.MapProperty(u => u.ClickCount).SetElementName("clickCount");
             cm.MapProperty(u => u.IsCustomAlias).SetElementName("isCustomAlias");
+            cm.MapProperty(u => u.TrackEveryClick).SetElementName("trackEveryClick");
         });
 
         BsonClassMap.RegisterClassMap<AppUser>(cm =>

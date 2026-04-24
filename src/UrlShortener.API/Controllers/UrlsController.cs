@@ -45,7 +45,8 @@ public sealed class UrlsController(
             LongUrl = request.LongUrl,
             UserId = UserId,
             ExpiresAt = request.ExpiresAt,
-            IsCustomAlias = !string.IsNullOrWhiteSpace(request.CustomAlias)
+            IsCustomAlias = !string.IsNullOrWhiteSpace(request.CustomAlias),
+            TrackEveryClick = request.TrackEveryClick
         };
 
         await urls.CreateAsync(url, ct);
@@ -53,7 +54,7 @@ public sealed class UrlsController(
         var ttl = request.ExpiresAt.HasValue
             ? request.ExpiresAt.Value - DateTime.UtcNow
             : (TimeSpan?)null;
-        await cache.SetAsync(shortCode, request.LongUrl, ttl, ct);
+        await cache.SetAsync(shortCode, EncodeCacheValue(request.LongUrl, request.TrackEveryClick), ttl, ct);
 
         return CreatedAtAction(nameof(GetAnalytics), new { shortCode }, ToResponse(url));
     }
@@ -91,13 +92,17 @@ public sealed class UrlsController(
             url.ClickCount,
             url.CreatedAt,
             url.ExpiresAt,
-            series));
+            series,
+            url.TrackEveryClick));
     }
 
     private ShortenUrlResponse ToResponse(ShortenedUrl u) =>
-        new(u.ShortCode, BuildShortUrl(u.ShortCode), u.LongUrl, u.CreatedAt, u.ExpiresAt, u.ClickCount);
+        new(u.ShortCode, BuildShortUrl(u.ShortCode), u.LongUrl, u.CreatedAt, u.ExpiresAt, u.ClickCount, u.TrackEveryClick);
 
     private string BuildShortUrl(string shortCode) => $"{BaseUrl}/{shortCode}";
+
+    private static string EncodeCacheValue(string longUrl, bool trackEveryClick) =>
+        $"{(trackEveryClick ? '1' : '0')}|{longUrl}";
 
     private static IReadOnlyList<DailyClickPoint> BuildFilledSeries(
         IReadOnlyList<DailyClickCount> raw, DateTime sinceUtc, int days)

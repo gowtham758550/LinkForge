@@ -7,7 +7,8 @@ public sealed record UrlAnalyticsResponse(
     long ClickCount,
     DateTime CreatedAt,
     DateTime? ExpiresAt,
-    IReadOnlyList<DailyClickPoint> ClicksByDay
+    IReadOnlyList<DailyClickPoint> ClicksByDay,
+    bool TrackEveryClick
 );
 
 public sealed record DailyClickPoint(DateTime Date, long Count);

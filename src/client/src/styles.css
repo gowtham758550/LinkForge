@@ -1,9 +1,7 @@
 @import "tailwindcss";
-@import "ngx-toastr/toastr";
-@source "./app/**/*.html";
-@source "./app/**/*.ts";
+@source "./**/*.{html,ts}";
 
-/* Dark mode: supports both system preference and manual .dark class */
+/* Dark mode: manual .dark class only (mockups are all light) */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -15,7 +13,7 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* CSS custom properties for light/dark surfaces */
+/* CSS custom properties — light defaults */
 :root {
   --bg: #fafafa;
   --fg: #0f0f0f;
@@ -31,23 +29,7 @@
   --danger-border: #fecdd3;
 }
 
-/* System dark mode (only when user hasn't forced .light) */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --bg: #09090b;
-    --fg: #fafafa;
-    --card-bg: #18181b;
-    --card-fg: #fafafa;
-    --muted: #27272a;
-    --muted-fg: #a1a1aa;
-    --border: #27272a;
-    --input: #27272a;
-    --danger-soft: #3b0d17;
-    --danger-border: #7f1d1d;
-  }
-}
-
-/* Manual dark override */
+/* Manual dark override only (user-initiated via theme toggle) */
 :root.dark {
   --bg: #09090b;
   --fg: #fafafa;
@@ -61,7 +43,7 @@
   --danger-border: #7f1d1d;
 }
 
-body {
+html, body {
   background-color: var(--bg);
   color: var(--fg);
   font-family: 'Inter', system-ui, sans-serif;
@@ -92,7 +74,6 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   border-radius: 0.75rem;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-  padding: 14px 18px 14px 50px;
 }
 .toast-container .toast-success {
   background-color: var(--color-primary);

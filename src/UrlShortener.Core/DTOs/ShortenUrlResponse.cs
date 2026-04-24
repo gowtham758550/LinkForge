@@ -6,5 +6,6 @@ public sealed record ShortenUrlResponse(
     string LongUrl,
     DateTime CreatedAt,
     DateTime? ExpiresAt,
-    long ClickCount
+    long ClickCount,
+    bool TrackEveryClick
 );

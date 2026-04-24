@@ -10,4 +10,5 @@ public sealed class ShortenedUrl
     public DateTime? ExpiresAt { get; set; }
     public long ClickCount { get; set; }
     public bool IsCustomAlias { get; set; }
+    public bool TrackEveryClick { get; set; }
 }

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, viewChild } from '@angular/core';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { ShortenUrlRequest } from '../../../core/models/url.model';
 import { UrlStore } from '../../data-access/url.store';
@@ -22,7 +21,6 @@ import { DashboardSkeletonComponent } from '../../../shared/ui/skeleton/dashboar
     ErrorBannerComponent,
     EmptyStateComponent,
     DashboardSkeletonComponent,
-    FaIconComponent,
   ],
   templateUrl: './dashboard.component.html',
 })

@@ -5,6 +5,7 @@ export interface ShortenedUrl {
   createdAt: string;
   expiresAt: string | null;
   clickCount: number;
+  trackEveryClick: boolean;
 }
 
 export interface DailyClickPoint {
@@ -20,10 +21,12 @@ export interface UrlAnalytics {
   createdAt: string;
   expiresAt: string | null;
   clicksByDay: DailyClickPoint[];
+  trackEveryClick: boolean;
 }
 
 export interface ShortenUrlRequest {
   longUrl: string;
   customAlias: string | null;
   expiresAt: string | null;
+  trackEveryClick: boolean;
 }

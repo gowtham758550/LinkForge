@@ -15,15 +15,26 @@
     >
       {{ url().shortUrl }}
     </a>
-    <p class="text-[11px] text-[var(--muted-fg)]">
-      Created {{ url().createdAt | date: 'MMM d, y' }}
-      <span class="mx-1">·</span>
-      @if (url().expiresAt) {
-        Expires {{ url().expiresAt | date: 'MMM d, y' }}
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <p class="text-[11px] text-[var(--muted-fg)]">
+        Created {{ url().createdAt | date: 'MMM d, y' }}
+        <span class="mx-1">·</span>
+        @if (url().expiresAt) {
+          Expires {{ url().expiresAt | date: 'MMM d, y' }}
+        } @else {
+          Expires Never
+        }
+      </p>
+      @if (url().trackEveryClick) {
+        <span class="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 text-[10px] font-semibold text-primary">
+          🎯 Accurate
+        </span>
       } @else {
-        Expires Never
+        <span class="inline-flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--muted)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted-fg)]">
+          ⚡ Fast
+        </span>
       }
-    </p>
+    </div>
   </div>
 
   <div class="flex shrink-0 items-center gap-1">

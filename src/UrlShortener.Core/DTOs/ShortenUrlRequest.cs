@@ -5,5 +5,6 @@ namespace UrlShortener.Core.DTOs;
 public sealed record ShortenUrlRequest(
     [Required, Url] string LongUrl,
     string? CustomAlias,
-    DateTime? ExpiresAt
+    DateTime? ExpiresAt,
+    bool TrackEveryClick = false
 );

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
@@ -22,6 +22,7 @@ export class ShortenFormComponent {
     expiresAt: [''],
   });
 
+  readonly trackEveryClick = signal(false);
   readonly faLink = faLink;
 
   onSubmit(): void {
@@ -31,10 +32,12 @@ export class ShortenFormComponent {
       longUrl: longUrl!,
       customAlias: customAlias || null,
       expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+      trackEveryClick: this.trackEveryClick(),
     });
   }
 
   reset(): void {
     this.form.reset({ longUrl: '', customAlias: '', expiresAt: '' });
+    this.trackEveryClick.set(false);
   }
 }
