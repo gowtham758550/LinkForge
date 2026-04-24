@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
-import { pipe, switchMap, tap } from 'rxjs';
+import { catchError, map, Observable, of, pipe, switchMap, tap } from 'rxjs';
 import { User } from '../../core/models/user.model';
 import { AuthService } from './auth.service';
 
@@ -70,5 +70,18 @@ export const AuthStore = signalStore(
         ),
       ),
     ),
+
+    initializeFromToken(): Observable<boolean> {
+      if (!store.token()) return of(false);
+      return authService.getMe().pipe(
+        tap(user => patchState(store, { user, loading: false })),
+        map(() => true),
+        catchError(() => {
+          localStorage.removeItem(TOKEN_KEY);
+          patchState(store, { user: null, token: null });
+          return of(false);
+        }),
+      );
+    },
   })),
 );

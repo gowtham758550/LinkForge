@@ -3,15 +3,14 @@ import { CanActivateFn, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { AuthStore } from '../../auth/data-access/auth.store';
 
-export const authGuard: CanActivateFn = () => {
+export const noAuthGuard: CanActivateFn = () => {
   const authStore = inject(AuthStore);
   const router = inject(Router);
 
-  if (!authStore.token()) return router.createUrlTree(['/']);
-  if (authStore.isAuthenticated()) return true;
+  if (!authStore.token()) return true;
+  if (authStore.isAuthenticated()) return router.createUrlTree(['/dashboard']);
 
-  // Token in storage but user not loaded yet (page reload) — fetch before deciding
   return authStore.initializeFromToken().pipe(
-    map(ok => (ok ? true : router.createUrlTree(['/']))),
+    map(ok => (ok ? router.createUrlTree(['/dashboard']) : true)),
   );
 };
