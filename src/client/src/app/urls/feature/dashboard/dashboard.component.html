@@ -1,5 +1,5 @@
 <main class="mx-auto max-w-5xl px-6 py-8">
-  @if (urlStore.loading() && urlStore.urlCount() === 0) {
+  @if (urlStore.loading() && !urlStore.initialized()) {
     <app-dashboard-skeleton />
   } @else {
     <div class="mb-6">

@@ -12,6 +12,7 @@ export type UrlFilter = 'active' | 'expired' | 'all';
 interface UrlState {
   urls: ShortenedUrl[];
   filter: UrlFilter;
+  initialized: boolean;
   selectedAnalytics: UrlAnalytics | null;
   loading: boolean;
   analyticsLoading: boolean;
@@ -24,6 +25,7 @@ export const UrlStore = signalStore(
   withState<UrlState>({
     urls: [],
     filter: 'active',
+    initialized: false,
     selectedAnalytics: null,
     loading: false,
     analyticsLoading: false,
@@ -64,7 +66,7 @@ export const UrlStore = signalStore(
         switchMap(() =>
           urlService.getAll(store.filter()).pipe(
             tapResponse({
-              next: urls => patchState(store, { urls, loading: false }),
+              next: urls => patchState(store, { urls, loading: false, initialized: true }),
               error: (err) => patchState(store, { loading: false, error: httpErrorMessage(err) }),
             }),
           ),
