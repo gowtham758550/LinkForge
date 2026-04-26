@@ -9,10 +9,27 @@ public sealed class UrlRepository(MongoDbContext context) : IUrlRepository
     public async Task<ShortenedUrl?> GetByShortCodeAsync(string shortCode, CancellationToken ct = default) =>
         await context.Urls.Find(u => u.ShortCode == shortCode).FirstOrDefaultAsync(ct);
 
-    public async Task<IEnumerable<ShortenedUrl>> GetByUserIdAsync(string userId, CancellationToken ct = default) =>
-        await context.Urls.Find(u => u.UserId == userId)
+    public async Task<IEnumerable<ShortenedUrl>> GetByUserIdAsync(string userId, string filter = "all", CancellationToken ct = default)
+    {
+        var b = Builders<ShortenedUrl>.Filter;
+        var userFilter = b.Eq(u => u.UserId, userId);
+        var now = DateTime.UtcNow;
+
+        var filterDef = filter switch
+        {
+            "active" => b.And(userFilter, b.Or(
+                b.Eq(u => u.ExpiresAt, (DateTime?)null),
+                b.Gt(u => u.ExpiresAt, now))),
+            "expired" => b.And(userFilter,
+                b.Ne(u => u.ExpiresAt, (DateTime?)null),
+                b.Lte(u => u.ExpiresAt, now)),
+            _ => userFilter
+        };
+
+        return await context.Urls.Find(filterDef)
             .SortByDescending(u => u.CreatedAt)
             .ToListAsync(ct);
+    }
 
     public async Task CreateAsync(ShortenedUrl url, CancellationToken ct = default) =>
         await context.Urls.InsertOneAsync(url, cancellationToken: ct);

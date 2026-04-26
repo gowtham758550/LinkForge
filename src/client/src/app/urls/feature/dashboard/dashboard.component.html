@@ -27,17 +27,24 @@
       />
     </div>
 
-    @if (urlStore.urlCount() === 0) {
+    <div class="mb-4 flex w-fit gap-1 rounded-xl border border-[var(--border)] bg-[var(--muted)] p-1">
+      <button type="button" (click)="onFilterChange('all')" [class]="tabClass('all')">All</button>
+      <button type="button" (click)="onFilterChange('active')" [class]="tabClass('active')">Active</button>
+      <button type="button" (click)="onFilterChange('expired')" [class]="tabClass('expired')">Expired</button>
+    </div>
+
+    @if (urlStore.urls().length === 0) {
       <div class="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)]">
         <app-empty-state
           [icon]="faLink"
-          title="No links yet"
-          subtitle="Shorten your first link to get started."
+          [title]="urlStore.filter() === 'expired' ? 'No expired links' : urlStore.filter() === 'all' ? 'No links yet' : 'No active links'"
+          [subtitle]="urlStore.filter() === 'all' ? 'Shorten your first link to get started.' : ''"
         />
       </div>
     } @else {
       <app-url-list
         [urls]="urlStore.urls()"
+        [isAllFilter]="urlStore.filter() === 'all'"
         (copyClick)="onCopy($event)"
         (deleteClick)="onDelete($event)"
       />

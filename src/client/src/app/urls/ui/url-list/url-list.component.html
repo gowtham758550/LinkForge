@@ -2,6 +2,7 @@
   @for (url of urls(); track url.shortCode) {
     <app-url-card
       [url]="url"
+      [isAllFilter]="isAllFilter()"
       (copyClick)="copyClick.emit($event)"
       (deleteClick)="deleteClick.emit($event)"
     />

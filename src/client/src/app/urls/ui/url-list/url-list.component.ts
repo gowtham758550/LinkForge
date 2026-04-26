@@ -10,6 +10,7 @@ import { UrlCardComponent } from '../url-card/url-card.component';
 })
 export class UrlListComponent {
   readonly urls = input.required<ShortenedUrl[]>();
+  readonly isAllFilter = input<boolean>(false);
   readonly copyClick = output<string>();
   readonly deleteClick = output<string>();
 }

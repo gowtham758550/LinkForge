@@ -5,9 +5,13 @@ import { tapResponse } from '@ngrx/operators';
 import { pipe, switchMap, tap } from 'rxjs';
 import { ShortenedUrl, UrlAnalytics } from '../../core/models/url.model';
 import { UrlService } from './url.service';
+import { httpErrorMessage } from '../../shared/utils/http-error';
+
+export type UrlFilter = 'active' | 'expired' | 'all';
 
 interface UrlState {
   urls: ShortenedUrl[];
+  filter: UrlFilter;
   selectedAnalytics: UrlAnalytics | null;
   loading: boolean;
   analyticsLoading: boolean;
@@ -19,6 +23,7 @@ export const UrlStore = signalStore(
   { providedIn: 'root' },
   withState<UrlState>({
     urls: [],
+    filter: 'active',
     selectedAnalytics: null,
     loading: false,
     analyticsLoading: false,
@@ -41,6 +46,10 @@ export const UrlStore = signalStore(
       patchState(store, { submitting: value });
     },
 
+    setFilter(filter: UrlFilter): void {
+      patchState(store, { filter });
+    },
+
     prependUrl(url: ShortenedUrl): void {
       patchState(store, s => ({ urls: [url, ...s.urls] }));
     },
@@ -53,10 +62,10 @@ export const UrlStore = signalStore(
       pipe(
         tap(() => patchState(store, { loading: true, error: null })),
         switchMap(() =>
-          urlService.getAll().pipe(
+          urlService.getAll(store.filter()).pipe(
             tapResponse({
               next: urls => patchState(store, { urls, loading: false }),
-              error: () => patchState(store, { loading: false, error: 'Failed to load URLs' }),
+              error: (err) => patchState(store, { loading: false, error: httpErrorMessage(err) }),
             }),
           ),
         ),
@@ -70,7 +79,7 @@ export const UrlStore = signalStore(
           urlService.getAnalytics(shortCode).pipe(
             tapResponse({
               next: analytics => patchState(store, { selectedAnalytics: analytics, analyticsLoading: false }),
-              error: () => patchState(store, { analyticsLoading: false, error: 'Failed to load analytics' }),
+              error: (err) => patchState(store, { analyticsLoading: false, error: httpErrorMessage(err) }),
             }),
           ),
         ),

@@ -26,5 +26,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./urls/feature/analytics/analytics.component').then(m => m.AnalyticsComponent),
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: 'not-found',
+    loadComponent: () =>
+      import('./shared/ui/not-found/not-found.component').then(m => m.NotFoundComponent),
+  },
+  { path: '**', redirectTo: 'not-found' },
 ];

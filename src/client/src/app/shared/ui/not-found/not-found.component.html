@@ -1,0 +1,40 @@
+<div class="flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center px-4 py-10 bg-[var(--bg)]">
+  <div class="flex flex-col items-center text-center max-w-md">
+
+    <div class="relative mb-8">
+      <div class="flex h-36 w-36 items-center justify-center rounded-full bg-primary/10">
+        <fa-icon [icon]="faLinkSlash" class="text-5xl text-primary" />
+      </div>
+      <div class="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-[var(--card-bg)] border-2 border-[var(--bg)]">
+        <div class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15">
+          <fa-icon [icon]="faXmark" class="text-sm text-primary" />
+        </div>
+      </div>
+    </div>
+
+    <h1 class="text-2xl font-extrabold tracking-tight text-primary mb-3">
+      Requested url is expired or not found.
+    </h1>
+    <p class="text-sm leading-relaxed text-[var(--muted-fg)]">
+      The link you followed may be expired, invalid,<br />or the url may have been removed.
+    </p>
+
+    <div class="my-8 flex w-full items-center gap-3">
+      <div class="h-px flex-1 bg-primary/20"></div>
+      <fa-icon [icon]="faLink" class="text-primary/40" />
+      <div class="h-px flex-1 bg-primary/20"></div>
+    </div>
+
+    <p class="text-base font-bold text-[var(--fg)] mb-1">Create your own short link.</p>
+    <p class="text-sm text-[var(--muted-fg)] mb-6">Shorten, share, and track your links with LinkForge.</p>
+
+    <a
+      routerLink="/dashboard"
+      class="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#7a0539]"
+    >
+      <fa-icon [icon]="faGaugeHigh" />
+      Go to Dashboard
+    </a>
+
+  </div>
+</div>

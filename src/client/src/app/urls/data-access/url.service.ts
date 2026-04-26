@@ -8,8 +8,8 @@ export class UrlService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiUrl}/api/urls`;
 
-  getAll() {
-    return this.http.get<ShortenedUrl[]>(this.base);
+  getAll(filter: string = 'all') {
+    return this.http.get<ShortenedUrl[]>(this.base, { params: { filter } });
   }
 
   shorten(request: ShortenUrlRequest) {

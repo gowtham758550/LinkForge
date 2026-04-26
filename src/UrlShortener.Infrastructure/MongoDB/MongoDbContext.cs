@@ -78,7 +78,7 @@ public sealed class MongoDbContext
 
         urlIndexes.CreateOne(new CreateIndexModel<ShortenedUrl>(
             Builders<ShortenedUrl>.IndexKeys.Ascending(u => u.ExpiresAt),
-            new CreateIndexOptions { ExpireAfter = TimeSpan.Zero, Sparse = true }));
+            new CreateIndexOptions { Sparse = true }));
 
         var userIndexes = Users.Indexes;
 

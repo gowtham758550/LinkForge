@@ -17,14 +17,19 @@
     </a>
     <div class="flex items-center gap-1.5 flex-wrap">
       <p class="text-[11px] text-[var(--muted-fg)]">
-        Created {{ url().createdAt | date: 'MMM d, y' }}
+        Created {{ url().createdAt | date: 'MMM d, y, h:mm a' }}
         <span class="mx-1">·</span>
         @if (url().expiresAt) {
-          Expires {{ url().expiresAt | date: 'MMM d, y' }}
+          Expires {{ url().expiresAt | date: 'MMM d, y, h:mm a' }}
         } @else {
           Expires Never
         }
       </p>
+      @if (isAllFilter() && isExpired()) {
+        <span class="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-400">
+          Expired
+        </span>
+      }
       @if (url().trackEveryClick) {
         <span class="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 text-[10px] font-semibold text-primary">
           🎯 Accurate

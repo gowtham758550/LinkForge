@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, viewChild } from '@angular/core';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { ShortenUrlRequest } from '../../../core/models/url.model';
-import { UrlStore } from '../../data-access/url.store';
+import { UrlFilter, UrlStore } from '../../data-access/url.store';
+import { httpErrorMessage } from '../../../shared/utils/http-error';
 import { UrlService } from '../../data-access/url.service';
 import { AuthStore } from '../../../auth/data-access/auth.store';
 import { NotifyService } from '../../../shared/data-access/notify.service';
@@ -50,11 +51,7 @@ export class DashboardComponent implements OnInit {
       },
       error: err => {
         this.urlStore.setSubmitting(false);
-        const msg =
-          err?.status === 409
-            ? 'That custom alias is already taken.'
-            : 'Failed to shorten URL. Please try again.';
-        this.urlStore.setError(msg);
+        this.urlStore.setError(httpErrorMessage(err));
       },
     });
   }
@@ -73,8 +70,20 @@ export class DashboardComponent implements OnInit {
         this.urlStore.removeUrl(shortCode);
         this.notify.success('Link deleted');
       },
-      error: () => this.urlStore.setError('Failed to delete link.'),
+      error: err => this.urlStore.setError(httpErrorMessage(err)),
     });
+  }
+
+  onFilterChange(filter: UrlFilter): void {
+    this.urlStore.setFilter(filter);
+    this.urlStore.loadUrls();
+  }
+
+  tabClass(tab: UrlFilter): string {
+    const base = 'rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors';
+    return this.urlStore.filter() === tab
+      ? `${base} bg-[var(--card-bg)] text-[var(--fg)] shadow-sm`
+      : `${base} text-[var(--muted-fg)] hover:text-[var(--fg)]`;
   }
 
   onCopy(url: string): void {

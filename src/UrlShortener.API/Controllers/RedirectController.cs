@@ -9,7 +9,8 @@ namespace UrlShortener.API.Controllers;
 public sealed class RedirectController(
     IUrlRepository urls,
     ICacheService cache,
-    IServiceScopeFactory scopeFactory) : ControllerBase
+    IServiceScopeFactory scopeFactory,
+    IConfiguration config) : ControllerBase
 {
     [HttpGet("/{shortCode}")]
     public async Task<IActionResult> Redirect(string shortCode, CancellationToken ct)
@@ -23,7 +24,7 @@ public sealed class RedirectController(
         {
             var url = await urls.GetByShortCodeAsync(shortCode, ct);
             if (url is null || (url.ExpiresAt.HasValue && url.ExpiresAt < DateTime.UtcNow))
-                return NotFound();
+                return Redirect($"{config["ClientUrl"]}/not-found");
 
             longUrl = url.LongUrl;
             userId = url.UserId;
