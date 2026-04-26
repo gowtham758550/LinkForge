@@ -28,6 +28,9 @@ public sealed class UrlsController(
     {
         string shortCode;
 
+        if (request.ExpiresAt.HasValue && request.ExpiresAt.Value - DateTime.UtcNow < TimeSpan.FromHours(1))
+            return BadRequest("Expiration must be at least 1 hour from now.");
+
         if (!string.IsNullOrWhiteSpace(request.CustomAlias))
         {
             if (await urls.ShortCodeExistsAsync(request.CustomAlias, ct))
@@ -54,15 +57,17 @@ public sealed class UrlsController(
         var ttl = request.ExpiresAt.HasValue
             ? request.ExpiresAt.Value - DateTime.UtcNow
             : (TimeSpan?)null;
-        await cache.SetAsync(shortCode, EncodeCacheValue(request.LongUrl, request.TrackEveryClick), ttl, ct);
+
+        if (ttl is null || ttl.Value > TimeSpan.Zero)
+            await cache.SetAsync(shortCode, EncodeCacheValue(request.LongUrl, request.TrackEveryClick), ttl, ct);
 
         return CreatedAtAction(nameof(GetAnalytics), new { shortCode }, ToResponse(url));
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ShortenUrlResponse>>> List(CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<ShortenUrlResponse>>> List([FromQuery] string filter = "all", CancellationToken ct = default)
     {
-        var list = await urls.GetByUserIdAsync(UserId, ct);
+        var list = await urls.GetByUserIdAsync(UserId, filter, ct);
         return Ok(list.Select(ToResponse));
     }
 

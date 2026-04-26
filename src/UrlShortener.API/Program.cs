@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -64,6 +65,9 @@ builder.Services.AddCors(opts =>
          .AllowCredentials()));
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 if (app.Environment.IsDevelopment())
     app.MapOpenApi();
