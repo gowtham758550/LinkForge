@@ -45,3 +45,6 @@ obj/
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,angular
 
 .env
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
