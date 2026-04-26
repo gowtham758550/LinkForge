@@ -5,6 +5,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { UrlStore } from '../../data-access/url.store';
+import { ThemeStore } from '../../../shared/data-access/theme.store';
 import { ErrorBannerComponent } from '../../../shared/ui/error-banner/error-banner.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 
@@ -26,6 +27,7 @@ const PRIMARY = '#970747';
 })
 export class AnalyticsComponent implements OnInit {
   readonly urlStore = inject(UrlStore);
+  private readonly themeStore = inject(ThemeStore);
   private readonly route = inject(ActivatedRoute);
   readonly faArrowLeft = faArrowLeft;
 
@@ -51,7 +53,10 @@ export class AnalyticsComponent implements OnInit {
     yaxis: { lines: { show: true } },
     padding: { left: 4, right: 4 },
   };
-  readonly chartTooltip = { theme: 'light' as const, x: { format: 'MMM d, yyyy' } };
+  readonly chartTooltip = computed(() => ({
+    theme: this.themeStore.isDark() ? 'dark' : 'light',
+    x: { format: 'MMM d, yyyy' },
+  }));
   readonly chartMarkers = { size: 4, colors: [PRIMARY], strokeColors: '#fff', strokeWidth: 2, hover: { size: 6 } };
   readonly chartYAxis = {
     labels: { style: { colors: '#888', fontSize: '11px' }, formatter: (v: number) => `${Math.round(v)}` },

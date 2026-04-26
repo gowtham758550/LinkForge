@@ -1,6 +1,6 @@
-import { effect, inject } from '@angular/core';
+import { computed, effect, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { patchState, signalStore, withMethods, withState, withHooks } from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withMethods, withState, withHooks } from '@ngrx/signals';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -15,6 +15,12 @@ export const ThemeStore = signalStore(
   withState<ThemeState>({
     theme: (localStorage.getItem(THEME_KEY) as Theme) ?? 'system',
   }),
+  withComputed((store) => ({
+    isDark: computed(() =>
+      store.theme() === 'dark' ||
+      (store.theme() === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ),
+  })),
   withMethods((store, document = inject(DOCUMENT)) => ({
     setTheme(theme: Theme): void {
       localStorage.setItem(THEME_KEY, theme);
@@ -32,19 +38,19 @@ export const ThemeStore = signalStore(
   withHooks({
     onInit(store, document = inject(DOCUMENT)) {
       applyTheme(store.theme(), document);
+
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      mq.addEventListener('change', () => {
+        if (store.theme() === 'system') applyTheme('system', document);
+      });
     },
   }),
 );
 
 function applyTheme(theme: Theme, document: Document): void {
   const html = document.documentElement;
-  if (theme === 'dark') {
-    html.classList.add('dark');
-    html.classList.remove('light');
-  } else if (theme === 'light') {
-    html.classList.add('light');
-    html.classList.remove('dark');
-  } else {
-    html.classList.remove('dark', 'light');
-  }
+  const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const dark = theme === 'dark' || (theme === 'system' && sysDark);
+  html.classList.toggle('dark', dark);
+  html.classList.toggle('light', !dark);
 }
