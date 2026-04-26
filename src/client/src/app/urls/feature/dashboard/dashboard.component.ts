@@ -12,6 +12,7 @@ import { UrlListComponent } from '../../ui/url-list/url-list.component';
 import { ErrorBannerComponent } from '../../../shared/ui/error-banner/error-banner.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { DashboardSkeletonComponent } from '../../../shared/ui/skeleton/dashboard-skeleton.component';
+import { UrlCardSkeletonComponent } from '../../../shared/ui/skeleton/url-card-skeleton.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,7 @@ import { DashboardSkeletonComponent } from '../../../shared/ui/skeleton/dashboar
     ErrorBannerComponent,
     EmptyStateComponent,
     DashboardSkeletonComponent,
+    UrlCardSkeletonComponent,
   ],
   templateUrl: './dashboard.component.html',
 })

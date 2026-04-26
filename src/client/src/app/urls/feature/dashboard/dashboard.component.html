@@ -1,5 +1,5 @@
 <main class="mx-auto max-w-5xl px-6 py-8">
-  @if (urlStore.loading()) {
+  @if (urlStore.loading() && urlStore.urlCount() === 0) {
     <app-dashboard-skeleton />
   } @else {
     <div class="mb-6">
@@ -33,7 +33,13 @@
       <button type="button" (click)="onFilterChange('expired')" [class]="tabClass('expired')">Expired</button>
     </div>
 
-    @if (urlStore.urls().length === 0) {
+    @if (urlStore.loading()) {
+      <div class="space-y-3">
+        @for (_ of [1, 2, 3]; track $index) {
+          <app-url-card-skeleton />
+        }
+      </div>
+    } @else if (urlStore.urls().length === 0) {
       <div class="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)]">
         <app-empty-state
           [icon]="faLink"
