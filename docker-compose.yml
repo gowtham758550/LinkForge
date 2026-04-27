@@ -8,6 +8,7 @@ services:
       - mongo-data:/data/db
     networks:
       - urlshortener-net
+    profiles: ["backend", "full"]
 
   redis:
     image: redis:7-alpine
@@ -16,6 +17,7 @@ services:
       - "6379:6379"
     networks:
       - urlshortener-net
+    profiles: ["backend", "full"]
 
   api:
     build:
@@ -41,6 +43,30 @@ services:
       - redis
     networks:
       - urlshortener-net
+    profiles: ["backend", "full"]
+
+  api-managed:
+    build:
+      context: .
+      dockerfile: src/UrlShortener.API/Dockerfile
+    container_name: urlshortener-api
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - MongoDB__ConnectionString=${MONGODB_CONNECTION_STRING}
+      - MongoDB__DatabaseName=urlshortener
+      - Redis__ConnectionString=${REDIS_CONNECTION_STRING}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+      - Jwt__Secret=${JWT_SECRET}
+      - Google__ClientId=${GOOGLE_CLIENT_ID}
+      - Google__ClientSecret=${GOOGLE_CLIENT_SECRET}
+      - BaseUrl=${BASE_URL}
+      - ClientUrl=${CLIENT_URL}
+    networks:
+      - urlshortener-net
+    profiles: ["api-only"]
 
   mcp:
     build:
@@ -63,6 +89,7 @@ services:
       - redis
     networks:
       - urlshortener-net
+    profiles: ["full"]
 
   client:
     build:
@@ -75,6 +102,7 @@ services:
       - api
     networks:
       - urlshortener-net
+    profiles: ["full"]
 
 volumes:
   mongo-data:
